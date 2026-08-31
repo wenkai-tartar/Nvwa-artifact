@@ -1,0 +1,9 @@
+topology,scale_name,scale_value,scale_label,system,routing,init_time_s,init_mem_gb,exec_time_s,exec_mem_gb,wall_s,total_time_s,hosts,repeat_count,source
+torus,d,5,TR5,ns-3-dc,NodeBfsWithHost,0.050116,0.024399,4.727260,0.127865,5.084024,5.084024,125.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_5.csv
+torus,d,10,TR10,ns-3-dc,NodeBfsWithHost,4.020320,0.282368,131.372000,1.247124,136.552905,136.552905,1000.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_5.csv
+torus,d,15,TR15,ns-3-dc,NodeBfsWithHost,56.824900,2.754948,343.249000,5.691948,412.349324,412.349324,3375.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_5.csv
+torus,d,20,TR20,ns-3-dc,NodeBfsWithHost,372.130000,15.042744,2349.010000,23.682713,2766.549354,2766.549354,8000.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_5.csv
+torus,d,5,TR5,Nüwa,RuleBased,0.022952,0.022011,4.638790,0.125069,4.861195,4.861195,125.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_5.csv
+torus,d,10,TR10,Nüwa,RuleBased,0.138648,0.022152,139.148000,1.038921,141.297683,141.297683,1000.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_5.csv
+torus,d,15,TR15,Nüwa,RuleBased,0.484428,0.125523,336.549000,3.070805,343.065827,343.065827,3375.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_5.csv
+torus,d,20,TR20,Nüwa,RuleBased,1.175520,0.273674,2404.070000,9.161156,2423.275364,2423.275364,8000.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_5.csv

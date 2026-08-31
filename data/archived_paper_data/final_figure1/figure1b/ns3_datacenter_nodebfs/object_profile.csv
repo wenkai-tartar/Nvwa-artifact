@@ -1,0 +1,17 @@
+case_id,repeat,routing,k,stage,levels,nodes,netdevices,p2p_netdevices,channels,ipv4,ipv4_interfaces,routing_protocols,rule_based_protocols,node_bfs_protocols,rule_based_rules,routing_entries,applications
+fattree_k4_NodeBfs_r1,1,NodeBfs,4,post_topology_build,4,36,132,96,48,36,132,36,0,36,0,0,0
+fattree_k4_NodeBfs_r1,1,NodeBfs,4,post_address_registration,4,36,132,96,48,36,132,36,0,36,0,0,0
+fattree_k4_NodeBfs_r1,1,NodeBfs,4,post_routing,4,36,132,96,48,36,132,36,0,36,0,768,0
+fattree_k4_NodeBfs_r1,1,NodeBfs,4,post_applications,4,36,132,96,48,36,132,36,0,36,0,768,16
+fattree_k8_NodeBfs_r1,1,NodeBfs,8,post_topology_build,4,208,976,768,384,208,976,208,0,208,0,0,0
+fattree_k8_NodeBfs_r1,1,NodeBfs,8,post_address_registration,4,208,976,768,384,208,976,208,0,208,0,0,0
+fattree_k8_NodeBfs_r1,1,NodeBfs,8,post_routing,4,208,976,768,384,208,976,208,0,208,0,49152,0
+fattree_k8_NodeBfs_r1,1,NodeBfs,8,post_applications,4,208,976,768,384,208,976,208,0,208,0,49152,128
+fattree_k16_NodeBfs_r1,1,NodeBfs,16,post_topology_build,4,1344,7488,6144,3072,1344,7488,1344,0,1344,0,0,0
+fattree_k16_NodeBfs_r1,1,NodeBfs,16,post_address_registration,4,1344,7488,6144,3072,1344,7488,1344,0,1344,0,0,0
+fattree_k16_NodeBfs_r1,1,NodeBfs,16,post_routing,4,1344,7488,6144,3072,1344,7488,1344,0,1344,0,3145728,0
+fattree_k16_NodeBfs_r1,1,NodeBfs,16,post_applications,4,1344,7488,6144,3072,1344,7488,1344,0,1344,0,3145728,1024
+fattree_k32_NodeBfs_r1,1,NodeBfs,32,post_topology_build,4,9472,58624,49152,24576,9472,58624,9472,0,9472,0,0,0
+fattree_k32_NodeBfs_r1,1,NodeBfs,32,post_address_registration,4,9472,58624,49152,24576,9472,58624,9472,0,9472,0,0,0
+fattree_k32_NodeBfs_r1,1,NodeBfs,32,post_routing,4,9472,58624,49152,24576,9472,58624,9472,0,9472,0,201326592,0
+fattree_k32_NodeBfs_r1,1,NodeBfs,32,post_applications,4,9472,58624,49152,24576,9472,58624,9472,0,9472,0,201326592,8192

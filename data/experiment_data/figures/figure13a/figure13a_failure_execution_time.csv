@@ -1,0 +1,16 @@
+failure_rate,k,fat_tree,system,routing,exec_time_s,exec_peak_mem_gb,wall_s,source
+0.001000,8,FT8,BFS,NodeBfs,3.776010,0.036095,3.861744,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,8,FT8,Nvwa,RuleBased,3.707010,0.031235,3.761812,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,16,FT16,BFS,NodeBfs,31.343400,0.410202,35.308471,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,16,FT16,Nvwa,RuleBased,30.060400,0.125530,30.353716,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,24,FT24,BFS,NodeBfs,132.593000,3.634136,183.015588,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,24,FT24,Nvwa,RuleBased,129.112000,0.370323,130.096243,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,32,FT32,BFS,NodeBfs,429.581000,17.690926,742.942161,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,32,FT32,Nvwa,RuleBased,427.586000,0.847939,430.055370,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,40,FT40,BFS,NodeBfs,960.755000,70.242058,2541.579751,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,40,FT40,Nvwa,RuleBased,907.081000,1.628902,911.853798,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,48,FT48,BFS,NodeBfs,1656.190000,199.026531,7406.607054,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,48,FT48,Nvwa,RuleBased,1577.400000,2.801720,1585.576055,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,56,FT56,BFS,NodeBfs,2821.870000,487.692089,20351.610492,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,56,FT56,Nvwa,RuleBased,2552.110000,4.420162,2565.349966,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv
+0.001000,64,FT64,Nvwa,RuleBased,3986.260000,6.655216,4006.278526,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_8.csv

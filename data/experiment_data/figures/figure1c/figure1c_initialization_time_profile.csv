@@ -1,0 +1,5 @@
+k,fat_tree,routing,repeat_count,hosts,routing_entries,init_total_s,bfs_route_compute_s,route_table_install_s,other_s,bfs_route_compute_pct,route_table_install_pct,other_pct
+4,FT4,NodeBfs,1,,,0.011665,0.000308,0.000120,0.011237,2.64,1.03,96.33
+8,FT8,NodeBfs,1,,,0.063244,0.021368,0.006739,0.035137,33.79,10.66,55.56
+16,FT16,NodeBfs,1,,,3.506588,2.659533,0.493929,0.353126,75.84,14.09,10.07
+32,FT32,NodeBfs,1,,,294.526945,234.446603,45.281541,14.798801,79.60,15.37,5.02

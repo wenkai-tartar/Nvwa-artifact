@@ -1,0 +1,7 @@
+topology,scale_value,scale_label,data_size,data_size_label,system,routing,exec_time_s,source
+dragonfly,6,DF6,1048576,1MB,ns-3-dc,NodeBfs,249.952000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_dragonfly.csv
+dragonfly,6,DF6,8388608,8MB,ns-3-dc,NodeBfs,979.107000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_dragonfly.csv
+dragonfly,6,DF6,16777216,16MB,ns-3-dc,NodeBfs,1256.680000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_dragonfly.csv
+dragonfly,6,DF6,1048576,1MB,Nüwa,RuleBased,250.009000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_dragonfly.csv
+dragonfly,6,DF6,8388608,8MB,Nüwa,RuleBased,1012.040000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_dragonfly.csv
+dragonfly,6,DF6,16777216,16MB,Nüwa,RuleBased,1267.940000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_dragonfly.csv

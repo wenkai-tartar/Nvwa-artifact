@@ -1,0 +1,14 @@
+topology,scale_name,scale_value,scale_label,system,routing,init_time_s,init_mem_gb,exec_time_s,exec_mem_gb,wall_s,total_time_s,hosts,repeat_count,source
+dragonfly,h,2,DF2,ns-3,Global,0.046067,0.018303,3.714020,0.079735,3.998689,3.998689,72.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,4,DF4,ns-3,Global,38.660700,0.330276,681.069000,1.190720,721.351636,721.351636,1056.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,6,DF6,ns-3,Global,6258.860000,5.015919,18937.300000,9.300640,25207.315169,25207.315169,5256.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,2,DF2,ns-3-dc,NodeBfs,0.022167,0.024094,2.539530,0.086029,2.652588,2.652588,72.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,4,DF4,ns-3-dc,NodeBfs,2.916290,0.317459,48.868500,1.235222,53.453668,53.453668,1056.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,6,DF6,ns-3-dc,NodeBfs,86.963600,6.471485,304.419000,10.971588,406.100540,406.100540,5256.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,8,DF8,ns-3-dc,NodeBfs,1076.590000,59.019096,1046.900000,72.732780,2272.076526,2272.076526,16512.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,10,DF10,ns-3-dc,NodeBfs,9806.520000,336.540936,2632.660000,369.284527,13312.395436,13312.395436,40200.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,2,DF2,Nüwa,RuleBased,0.015978,0.022152,2.751760,0.086895,2.863250,2.863250,72.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,4,DF4,Nüwa,RuleBased,0.136599,0.021931,50.927700,0.992966,52.359980,52.359980,1056.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,6,DF6,Nüwa,RuleBased,0.678124,0.176456,304.760000,4.775135,309.012956,309.012956,5256.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,8,DF8,Nüwa,RuleBased,2.171310,0.461746,1033.000000,14.634800,1046.660612,1046.660612,16512.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv
+dragonfly,h,10,DF10,Nüwa,RuleBased,5.504150,1.149933,2556.330000,34.888500,2591.076523,2591.076523,40200.000000,1,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_4.csv

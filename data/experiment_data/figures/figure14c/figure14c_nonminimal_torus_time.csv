@@ -1,0 +1,13 @@
+platform,param_name,param_value,scale_label,series,routing,exec_time_s,exec_peak_mem_gb,wall_s,source
+torus,d,5,TR5,Shortest,RuleBased,4.716850,0.121445,4.843768,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,5,TR5,Detour1,RuleBased,6.991440,0.132572,7.088970,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,5,TR5,Detour2,RuleBased,8.980680,0.134193,9.068348,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,10,TR10,Shortest,RuleBased,124.208000,0.897733,124.556455,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,10,TR10,Detour1,RuleBased,179.176000,0.986816,179.558362,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,10,TR10,Detour2,RuleBased,229.872000,0.996407,230.286911,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,15,TR15,Shortest,RuleBased,350.491000,2.960196,351.616421,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,15,TR15,Detour1,RuleBased,825.699000,3.286766,827.063957,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,15,TR15,Detour2,RuleBased,1179.520000,3.328327,1181.050537,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,20,TR20,Shortest,RuleBased,2438.275000,7.199463,2441.699805,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,20,TR20,Detour1,RuleBased,3412.900000,7.905113,3416.722127,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+torus,d,20,TR20,Detour2,RuleBased,3962.110000,7.945316,3966.206654,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv

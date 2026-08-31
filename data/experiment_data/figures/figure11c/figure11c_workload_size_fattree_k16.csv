@@ -1,0 +1,11 @@
+topology,scale_value,scale_label,data_size,data_size_label,system,routing,exec_time_s,source
+fattree,16,FT16,1048576,1MB,ns-3-dc,NodeBfs,33.785500,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,8388608,8MB,ns-3-dc,NodeBfs,138.767000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,16777216,16MB,ns-3-dc,NodeBfs,182.929000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,67108864,64MB,ns-3-dc,NodeBfs,442.566000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,134217728,128MB,ns-3-dc,NodeBfs,790.884000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,1048576,1MB,Nüwa,RuleBased,33.902200,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,8388608,8MB,Nüwa,RuleBased,139.823000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,16777216,16MB,Nüwa,RuleBased,183.953000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,67108864,64MB,Nüwa,RuleBased,456.407000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv
+fattree,16,FT16,134217728,128MB,Nüwa,RuleBased,811.742000,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_7_fattree.csv

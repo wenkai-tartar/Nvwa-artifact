@@ -1,0 +1,16 @@
+platform,param_name,param_value,scale_label,series,routing,exec_time_s,exec_peak_mem_gb,wall_s,source
+dragonfly,h,2,DF2,Shortest,RuleBased,1.966000,0.024906,1.998397,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,2,DF2,UGAL,RuleBased,2.323420,0.024879,2.355826,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,2,DF2,Valiant,RuleBased,2.326200,0.025040,2.359937,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,4,DF4,Shortest,RuleBased,32.854050,0.120384,33.107311,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,4,DF4,UGAL,RuleBased,37.569100,0.123871,37.821599,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,4,DF4,Valiant,RuleBased,37.712300,0.124043,37.970426,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,6,DF6,Shortest,RuleBased,255.630500,0.511846,256.896876,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,6,DF6,UGAL,RuleBased,288.462000,0.530106,289.747265,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,6,DF6,Valiant,RuleBased,286.782000,0.529713,288.044686,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,8,DF8,Shortest,RuleBased,994.670500,1.545608,998.783030,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,8,DF8,UGAL,RuleBased,1112.950000,1.605240,1117.070445,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,8,DF8,Valiant,RuleBased,1105.000000,1.605389,1109.114518,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,10,DF10,Shortest,RuleBased,2586.220000,3.734295,2596.562546,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,10,DF10,UGAL,RuleBased,2880.640000,3.879810,2891.184663,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv
+dragonfly,h,10,DF10,Valiant,RuleBased,2873.090000,3.879848,2883.536195,/users/tartar/Nvwa-artifact/data/experiment_data/experiment_9.csv

@@ -1,0 +1,89 @@
+{
+  "created_at": "2026-06-28T14:47:33",
+  "repo_root": "Nvwa",
+  "git_sha": "a1c35c2a5c2e8f329c1dc037adbd6a85ae6e0561",
+  "git_dirty": "no",
+  "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+  "platform": "Linux-5.15.0-177-generic-x86_64-with-glibc2.35",
+  "ns3_tool": "Nvwa/ns3",
+  "argv": [
+    "src/datacenter/experiments/fattree_time_profile_sweep.py",
+    "--k-values",
+    "4,8,16,32",
+    "--routings",
+    "NodeBfs",
+    "--repeats",
+    "1",
+    "--data-size",
+    "1048576",
+    "--data-rate",
+    "100Gbps",
+    "--degree",
+    "4",
+    "--packet-size",
+    "1000",
+    "--traffic-pattern",
+    "allreduce",
+    "--traffic-replay-mode",
+    "batch",
+    "--allreduce-group-size",
+    "8",
+    "--allreduce-placement",
+    "strided",
+    "--allreduce-step-gap",
+    "0",
+    "--bandwidth",
+    "100Gbps",
+    "--delay",
+    "1us",
+    "--build-profile",
+    "optimized",
+    "--out-dir",
+    "results/experiment8_nodebfs_initialization_time_profile_20260628T144733057863472Z",
+    "--skip-build"
+  ],
+  "topology": "fattree",
+  "k_values": [
+    4,
+    8,
+    16,
+    32
+  ],
+  "sizes": [
+    {
+      "k": 4,
+      "theoretical_hosts": 16
+    },
+    {
+      "k": 8,
+      "theoretical_hosts": 128
+    },
+    {
+      "k": 16,
+      "theoretical_hosts": 1024
+    },
+    {
+      "k": 32,
+      "theoretical_hosts": 8192
+    }
+  ],
+  "routings": [
+    "NodeBfs"
+  ],
+  "repeats": 1,
+  "data_size": 1048576,
+  "data_rate": "100Gbps",
+  "degree": 4,
+  "packet_size": 1000,
+  "traffic_pattern": "allreduce",
+  "traffic_replay_mode": "batch",
+  "allreduce_group_size": 8,
+  "allreduce_placement": "strided",
+  "allreduce_step_gap": 0.0,
+  "bandwidth": "100Gbps",
+  "delay": "1us",
+  "init_only": true,
+  "memory_profile": false,
+  "build_profile": "optimized",
+  "skip_build": true
+}
