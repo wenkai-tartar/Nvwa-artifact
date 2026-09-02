@@ -34,6 +34,7 @@ This artifact reproduces the paper's experimental figures:
 - [Running Experiments](#running-experiments)
 - [Lightweight Experiments](#lightweight-experiments)
 - [Full Experiments](#full-experiments)
+- [Running Individual Data Points](#running-individual-data-points)
 - [Stopping Experiments](#stopping-experiments)
 - [Plotting the Figures](#plotting-the-figures)
 - [Appendix: Individual Lightweight Experiment Commands](#appendix-individual-lightweight-experiment-commands)
@@ -216,7 +217,8 @@ The kick-the-tires result directory includes:
 
 ## Running Experiments
 
-Please run these experiments before plotting.
+This artifact contains the experiments described in the paper. The table below maps each experiment to the corresponding figures.
+
 
 <table>
   <thead>
@@ -265,20 +267,33 @@ Please run these experiments before plotting.
   </tbody>
 </table>
 
-The lightweight and full one-command runners use the same flat data layout.
-Their `data/` directory contains `experiment_1.csv`,
-`experiment_2_summary.csv`, `experiment_2_memory_profile.csv`,
-`experiment_2_object_profile.csv`, `experiment_3_summary.csv`,
-`experiment_3_time_profile.csv`, `experiment_3_time_breakdown.csv`,
-`experiment_4.csv`, `experiment_5.csv`, `experiment_6.csv`,
-`experiment_6_manifest.json`, `experiment_7_dragonfly.csv`,
-`experiment_7_fattree.csv`, `experiment_8.csv`, and `experiment_9.csv`.
+Each experiment supports two execution modes: lightweight and full.
 
 ### Lightweight Experiments
 
 Run this command after completing [From Scratch](#from-scratch) and
 [Quick Checks](#quick-checks). It runs the lightweight versions of Experiments
 1-9 sequentially and plots the corresponding figures at the end:
+
+On a recommended CloudLab node, the full lightweight suite typically takes about
+2-3 hours end-to-end. Individual lightweight experiments are intended to finish
+within about 1 hour each.
+
+Because the run can continue for a long time, start a `tmux` session first and
+run the command inside that session:
+
+```bash
+tmux new -s nvwa-lightweight
+bash scripts/run_lightweight_experiments.sh
+```
+
+Detach from the session with `Ctrl-b` then `d`, and later reattach with:
+
+```bash
+tmux attach -t nvwa-lightweight
+```
+
+If you are not using `tmux`, run the same experiment command directly:
 
 ```bash
 bash scripts/run_lightweight_experiments.sh
@@ -291,9 +306,7 @@ only the experiments without plotting. Re-running the same command resumes the
 latest lightweight suite and skips experiments that already completed
 successfully; use `--rerun-all` to run all selected experiments again.
 
-The lightweight commands use smaller workloads and are intended to finish in
-under 1 hour per experiment on a recommended CloudLab node. To run only a
-subset, pass experiment IDs:
+To run only a subset of the lightweight experiments, pass experiment IDs:
 
 ```bash
 bash scripts/run_lightweight_experiments.sh 1 4 5
@@ -311,6 +324,22 @@ For single-experiment reruns or debugging, see
 ### Full Experiments
 
 Run this command for the full experiments:
+
+The full run can take many hours or longer, so start a `tmux` session first and
+run the command inside that session:
+
+```bash
+tmux new -s nvwa-full
+bash scripts/run_full_experiments.sh
+```
+
+Detach from the session with `Ctrl-b` then `d`, and later reattach with:
+
+```bash
+tmux attach -t nvwa-full
+```
+
+If you are not using `tmux`, run the same experiment command directly:
 
 ```bash
 bash scripts/run_full_experiments.sh
@@ -390,6 +419,126 @@ bash plots/plot_figures.sh --full-data all
 
 This reads `data/archived_paper_data/` and writes figures under
 `results/full_data_figures/`.
+
+### Running Individual Data Points
+
+To run only one single data point of an experiment, start from the corresponding
+single-experiment command in
+[Appendix: Individual Lightweight Experiment Commands](#appendix-individual-lightweight-experiment-commands)
+or [Appendix: Individual Full Experiment Commands](#appendix-individual-full-experiment-commands),
+then set the parameters below to one value each. Use `REPEATS=1 SKIP_BUILD=1`
+for quick reruns after the environment has already been built.
+A data point is one combination of the parameter values listed for that
+experiment.
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 1 FatTree Ring AllReduce | Routing system | `RUN_GLOBAL`, `RUN_NODEBFS`, `RUN_RULEBASED` | all enabled | all enabled |
+| 1 FatTree Ring AllReduce | FatTree scale for ns-3/Global | `GLOBAL_K_VALUES` | `8,16` | `8,16,24` |
+| 1 FatTree Ring AllReduce | FatTree scale for ns-3-dc/NodeBfs | `NODEBFS_K_VALUES` | `8,16` | `8,16,24,32,40,48,56` |
+| 1 FatTree Ring AllReduce | FatTree scale for Nvwa/RuleBased | `RULEBASED_K_VALUES` | `8,16` | `8,16,24,32,40,48,56,64,72,80,88,96` |
+| 1 FatTree Ring AllReduce | Workload size | `DATA_SIZE` | `1048576` | `1048576` |
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 2 FatTree Memory Profiling | Routing system | `--routings`, or `ROUTINGS` | `NodeBfs` | `NodeBfs` |
+| 2 FatTree Memory Profiling | FatTree scale for ns-3/Global | `GLOBAL_K_VALUES` | not run by default | `4,8,16` if Global is enabled |
+| 2 FatTree Memory Profiling | FatTree scale for ns-3-dc/NodeBfs | `NODEBFS_K_VALUES` | `4,8,16` | `4,8,16` |
+| 2 FatTree Memory Profiling | FatTree scale for Nvwa/RuleBased | `RULEBASED_K_VALUES` | not run by default | `4,8,16` if RuleBased is enabled |
+| 2 FatTree Memory Profiling | Workload size | `DATA_SIZE` | `1048576` | `1048576` |
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 3 NodeBfs Initialization Time Profiling | Routing system | `ROUTINGS` | `NodeBfs` | `NodeBfs` |
+| 3 NodeBfs Initialization Time Profiling | FatTree scale | `K_VALUES` | `4,8,16` | `4,8,16` |
+| 3 NodeBfs Initialization Time Profiling | Workload size | `DATA_SIZE` | `1048576` | `1048576` |
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 4 Dragonfly Ring AllReduce | Routing system | `RUN_GLOBAL`, `RUN_NODEBFS`, `RUN_RULEBASED` | all enabled | all enabled |
+| 4 Dragonfly Ring AllReduce | Dragonfly scale for ns-3/Global | `GLOBAL_H_VALUES` | `2,4` | `2,4,6` |
+| 4 Dragonfly Ring AllReduce | Dragonfly scale for ns-3-dc/NodeBfs | `NODEBFS_H_VALUES` | `2,4` | `2,4,6,8,10,14` |
+| 4 Dragonfly Ring AllReduce | Dragonfly scale for Nvwa/RuleBased | `RULEBASED_H_VALUES` | `2,4` | `2,4,6,8,10,14` |
+| 4 Dragonfly Ring AllReduce | Workload size | `DATA_SIZE` | `1048576` | `1048576` |
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 5 Torus Ring AllReduce | Routing system | `RUN_GLOBAL`, `RUN_NODEBFS`, `RUN_RULEBASED` | all enabled | all enabled |
+| 5 Torus Ring AllReduce | Torus scale for ns-3/Global | `GLOBAL_D_VALUES` | `5` | `5,10` |
+| 5 Torus Ring AllReduce | Torus scale for ns-3-dc/NodeBfs | `NODEBFS_D_VALUES` | `5,10` | `5,10,15,20,25,30` |
+| 5 Torus Ring AllReduce | Torus scale for Nvwa/RuleBased | `RULEBASED_D_VALUES` | `5,10` | `5,10,15,20,25,30` |
+| 5 Torus Ring AllReduce | ns-3-dc Torus routing name | `TORUS_NODEBFS_ROUTING` | `NodeBfsWithHost` | `NodeBfsWithHost` |
+| 5 Torus Ring AllReduce | Workload size | `DATA_SIZE` | `1048576` | `1048576` |
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 6 ATLAHS Production Workload | Routing system | `ROUTINGS` | `RuleBased,NodeBfs` | `RuleBased,NodeBfs` |
+| 6 ATLAHS Production Workload | Dragonfly scale | `DRAGONFLY_H_VALUES` | `auto` | `auto` |
+| 6 ATLAHS Production Workload | Converted trace size | `ATLAHS_CONVERT_MAX_FLOWS` | `5000` | `0` (no truncation) |
+| 6 ATLAHS Production Workload | Replay trace size | `TRAFFIC_TRACE_MAX_FLOWS` | `5000` | `0` (no truncation) |
+| 6 ATLAHS Production Workload | Binary-trace conversion cap per rank | `ATLAHS_MAX_FLOWS_PER_RANK` | `16` | `200` |
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 7 Workload-Size Ring AllReduce | Topology family | `RUN_DRAGONFLY`, `RUN_FATTREE` | both enabled | both enabled |
+| 7 Workload-Size Ring AllReduce | Dragonfly scale | `DRAGONFLY_H_VALUES` | `4,6` | `4,6` |
+| 7 Workload-Size Ring AllReduce | FatTree scale | `FATTREE_K_VALUES` | `16,24` | `16,24` |
+| 7 Workload-Size Ring AllReduce | Workload size | `DATA_SIZE_VALUES` | `1048576,8388608` | `1048576,8388608,16777216,67108864,134217728` |
+| 7 Workload-Size Ring AllReduce | Dragonfly `h=6` workload override | `DRAGONFLY_H6_DATA_SIZE_VALUES` | unused when `DATA_SIZE_VALUES` is set | `1048576,8388608,16777216` if `DATA_SIZE_VALUES` is unset |
+| 7 Workload-Size Ring AllReduce | Routing system | `ROUTINGS` | `RuleBased` | `NodeBfs,RuleBased` |
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 8 FatTree Failure Handling | Nvwa/RuleBased FatTree scale | `K_VALUES` | `8,16` | `8,16,24,32,40,48,56,64` |
+| 8 FatTree Failure Handling | BFS FatTree scale | `BFS_K_VALUES` | `8,16` | `8,16,24,32,40,48,56` |
+| 8 FatTree Failure Handling | Failure rate | `FAILURE_RATES` | `0.001` | `0.001` |
+| 8 FatTree Failure Handling | Nvwa routing name | `ROUTING` | `RuleBased` | `RuleBased` |
+| 8 FatTree Failure Handling | BFS routing name | `BFS_ROUTING` | `NodeBfs` | `NodeBfs` |
+| 8 FatTree Failure Handling | Run BFS comparison | `RUN_BFS` | `1` | `1` |
+
+| Experiment | Data point parameter | Variable(s) to set | Lightweight suite values | Full/default values |
+| --- | --- | --- | --- | --- |
+| 9 Non-Minimal Routing | Routing group | `ONLY_GROUPS` | `dragonfly_valiant,torus_detour1` | `dragonfly_valiant,dragonfly_ugal,torus_detour1,torus_detour2` |
+| 9 Non-Minimal Routing | Dragonfly scale | `H_VALUES` | `2,4` | `2,4,6,8,10` |
+| 9 Non-Minimal Routing | Torus scale | `D_VALUES` | `5` | `5,10,15,20` |
+| 9 Non-Minimal Routing | Workload size | `DATA_SIZE`, `FLOW_SIZE` | `1048576` | `1048576` |
+
+For example, this runs one Experiment 5 Torus data point: Nvwa/RuleBased at
+`TR10`.
+
+```bash
+RUN_GLOBAL=0 \
+RUN_NODEBFS=0 \
+RUN_RULEBASED=1 \
+RULEBASED_D_VALUES="10" \
+REPEATS=1 SKIP_BUILD=1 \
+  bash scripts/run_experiment3_torus_ring_allreduce.sh
+```
+
+This runs one Experiment 7 workload-size data point: Nvwa/RuleBased on `FT16`
+with an 8MB workload.
+
+```bash
+RUN_DRAGONFLY=0 \
+RUN_FATTREE=1 \
+FATTREE_K_VALUES="16" \
+DATA_SIZE_VALUES="8388608" \
+ROUTINGS="RuleBased" \
+REPEATS=1 SKIP_BUILD=1 \
+  bash scripts/run_experiment8_workload_size_allreduce.sh
+```
+
+After running an individual data point, generate the corresponding figure outputs
+with the README experiment ID:
+
+```bash
+bash plots/plot_figures.sh <EXPERIMENT_ID>
+```
+
+Some script names keep legacy numbering, so use the experiment IDs from the
+table above when plotting. For example, Torus Ring AllReduce is Experiment 5 in
+this README even though its script is named
+`scripts/run_experiment3_torus_ring_allreduce.sh`.
 
 ## Appendix: Individual Lightweight Experiment Commands
 
