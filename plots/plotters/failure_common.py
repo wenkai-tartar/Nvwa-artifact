@@ -38,6 +38,10 @@ SYSTEMS = [
     },
 ]
 
+SYSTEM_BY_KEY = {str(system["key"]): system for system in SYSTEMS}
+PLOT_ORDER = ["bfs", "nvwa"]
+SYSTEM_ZORDER = {"bfs": 4, "nvwa": 5}
+
 CSV_FIELDS = [
     "failure_rate",
     "k",
@@ -282,7 +286,8 @@ def apply_axis_style(ax, values: list[float]) -> None:
         ax.set_ylim(bottom=0.0, top=top * 1.14 if top > 0 else 1.0)
 
 
-def legend_handles() -> list[Line2D]:
+def legend_handles(system_keys: list[str] | None = None) -> list[Line2D]:
+    included = set(system_keys) if system_keys is not None else None
     return [
         Line2D(
             [0],
@@ -291,9 +296,13 @@ def legend_handles() -> list[Line2D]:
             marker=str(system["marker"]),
             linewidth=2.2,
             markersize=6.5,
+            markerfacecolor="none",
+            markeredgecolor=str(system["color"]),
+            markeredgewidth=1.25,
             label=str(system["label"]),
         )
         for system in SYSTEMS
+        if included is None or str(system["key"]) in included
     ]
 
 
@@ -308,15 +317,32 @@ def plot_metric_axis(
     k_values = sorted({int(row["k"]) for row in rows})
     positions = {k: idx for idx, k in enumerate(k_values)}
     values: list[float] = []
+    present_system_keys = []
 
     for system in SYSTEMS:
+        system_key = str(system["key"])
+        for k in k_values:
+            matches = [
+                row
+                for row in rows
+                if row["system_key"] == system_key and int(row["k"]) == k and row.get(metric) is not None
+            ]
+            value = mean([float(row[metric]) for row in matches])
+            if value is not None:
+                present_system_keys.append(system_key)
+                break
+
+    for system_key in PLOT_ORDER:
+        if system_key not in present_system_keys:
+            continue
+        system = SYSTEM_BY_KEY[system_key]
         x_values = []
         y_values = []
         for k in k_values:
             matches = [
                 row
                 for row in rows
-                if row["system_key"] == system["key"] and int(row["k"]) == k and row.get(metric) is not None
+                if row["system_key"] == system_key and int(row["k"]) == k and row.get(metric) is not None
             ]
             value = mean([float(row[metric]) for row in matches])
             if value is None:
@@ -333,11 +359,17 @@ def plot_metric_axis(
             marker=str(system["marker"]),
             linewidth=2.2,
             markersize=6.5,
+            markerfacecolor="none",
+            markeredgecolor=str(system["color"]),
+            markeredgewidth=1.25,
             label=str(system["label"]),
+            zorder=SYSTEM_ZORDER.get(system_key, 3),
         )
 
     ax.set_xticks(range(len(k_values)))
     ax.set_xticklabels([f"FT{k}" for k in k_values], rotation=35, ha="right")
+    if k_values:
+        ax.set_xlim(-0.2, len(k_values) - 1 + 0.2)
     ax.set_ylabel(ylabel)
     if xlabel:
         ax.set_xlabel(xlabel, fontweight="bold")
@@ -354,7 +386,13 @@ def plot_single_metric(rows: list[dict[str, object]], figure: str, out_dir: Path
         ylabel=str(spec["ylabel"]),
         xlabel=str(spec["xlabel"]),
     )
-    ax.legend(handles=legend_handles(), loc="upper left", frameon=False, fontsize=8, handlelength=1.8)
+    metric = str(spec["metric"])
+    present_system_keys = [
+        str(system["key"])
+        for system in SYSTEMS
+        if any(row["system_key"] == system["key"] and row.get(metric) is not None for row in rows)
+    ]
+    ax.legend(handles=legend_handles(present_system_keys), loc="upper left", frameon=False, fontsize=8, handlelength=1.8)
     fig.tight_layout()
     return save_figure(fig, out_dir, figure, formats)
 

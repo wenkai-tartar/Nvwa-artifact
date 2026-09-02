@@ -77,6 +77,10 @@ SYSTEMS = [
     },
 ]
 
+SYSTEM_BY_KEY = {str(system["key"]): system for system in SYSTEMS}
+PLOT_ORDER = ["ns3", "ns3dc", "nvwa"]
+SYSTEM_ZORDER = {"ns3": 3, "ns3dc": 4, "nvwa": 5}
+
 
 METRICS = {
     "memory": {
@@ -378,12 +382,28 @@ def plot_metric_axis(ax, rows, topology, metric, panel_label=None):
     lookup = row_lookup(rows)
     scales = topology_scales(rows, topology["key"])
     positions = {scale: idx for idx, scale in enumerate(scales)}
+    present_system_keys = []
 
     for system in SYSTEMS:
+        system_key = str(system["key"])
+        for scale in scales:
+            row = lookup.get((topology["key"], system_key, scale))
+            value = row.get(metric_spec["field"]) if row else None
+            if value is None:
+                continue
+            if metric_spec["log"] and value <= 0:
+                continue
+            present_system_keys.append(system_key)
+            break
+
+    for system_key in PLOT_ORDER:
+        if system_key not in present_system_keys:
+            continue
+        system = SYSTEM_BY_KEY[system_key]
         x_values = []
         y_values = []
         for scale in scales:
-            row = lookup.get((topology["key"], system["key"], scale))
+            row = lookup.get((topology["key"], system_key, scale))
             value = row.get(metric_spec["field"]) if row else None
             if value is None:
                 continue
@@ -400,7 +420,11 @@ def plot_metric_axis(ax, rows, topology, metric, panel_label=None):
             marker=system["marker"],
             linewidth=2.2,
             markersize=6.5,
+            markerfacecolor="none",
+            markeredgecolor=system["color"],
+            markeredgewidth=1.25,
             label=system["label"],
+            zorder=SYSTEM_ZORDER.get(system_key, 3),
         )
 
     ax.set_xticks(range(len(scales)))
@@ -409,6 +433,8 @@ def plot_metric_axis(ax, rows, topology, metric, panel_label=None):
         rotation=45,
         ha="right",
     )
+    if scales:
+        ax.set_xlim(-0.22, len(scales) - 1 + 0.22)
     ax.set_ylabel(metric_spec["ylabel"])
     if panel_label:
         ax.set_xlabel(panel_label, fontweight="bold")
@@ -416,7 +442,8 @@ def plot_metric_axis(ax, rows, topology, metric, panel_label=None):
     apply_axis_style(ax, values, metric_spec["log"])
 
 
-def legend_handles():
+def legend_handles(system_keys=None):
+    included = set(system_keys) if system_keys is not None else None
     return [
         Line2D(
             [0],
@@ -425,9 +452,13 @@ def legend_handles():
             marker=system["marker"],
             linewidth=2.5,
             markersize=8,
+            markerfacecolor="none",
+            markeredgecolor=system["color"],
+            markeredgewidth=1.25,
             label=system["label"],
         )
         for system in SYSTEMS
+        if included is None or str(system["key"]) in included
     ]
 
 
@@ -470,8 +501,14 @@ def plot_single_metric(rows, figure, out_dir, formats):
 
     fig, ax = plt.subplots(figsize=(3.45, 2.35))
     plot_metric_axis(ax, figure_rows, topology, metric, panel_label=spec["xlabel"])
+    metric_field = METRICS[metric]["field"]
+    present_system_keys = [
+        str(system["key"])
+        for system in SYSTEMS
+        if any(row["system_key"] == system["key"] and row.get(metric_field) is not None for row in figure_rows)
+    ]
     ax.legend(
-        handles=legend_handles(),
+        handles=legend_handles(present_system_keys),
         loc="upper left",
         frameon=False,
         fontsize=8,

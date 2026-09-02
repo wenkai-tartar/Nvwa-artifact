@@ -18,6 +18,7 @@ from plot_style import configure_matplotlib
 configure_matplotlib(matplotlib)
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 
 OUTPUT_BASENAME = "figure1a"
@@ -31,6 +32,7 @@ LOWER_MAX_GB = 40.0
 UPPER_MIN_GB = 100.0
 BREAK_DISPLAY_GB = 14.0
 UPPER_SCALE = 0.22
+LINEAR_AXIS_HEADROOM = 1.18
 CSV_FIELDS = [
     "k",
     "fat_tree",
@@ -254,9 +256,12 @@ def plot(rows: list[dict[str, object]], out_dir: Path, formats: list[str]) -> li
     labels = [str(row["fat_tree"]) for row in rows]
     init_values = [float(row["initialization_peak_gb"]) for row in rows]
     exec_values = [float(row["execution_increment_gb"]) for row in rows]
+    totals = [init + inc for init, inc in zip(init_values, exec_values)]
+    ymax = max(totals, default=1.0)
+    use_broken_axis = ymax >= UPPER_MIN_GB
     x = list(range(len(rows)))
-    init_display = [y_display(value) for value in init_values]
-    total_display = [y_display(init + inc) for init, inc in zip(init_values, exec_values)]
+    init_display = [y_display(value) for value in init_values] if use_broken_axis else init_values
+    total_display = [y_display(total) for total in totals] if use_broken_axis else totals
     exec_display = [max(total - init, 0.0) for init, total in zip(init_display, total_display)]
 
     fig, ax = plt.subplots(figsize=FIGSIZE)
@@ -283,48 +288,53 @@ def plot(rows: list[dict[str, object]], out_dir: Path, formats: list[str]) -> li
         label="Execution increment",
         zorder=3,
     )
-    for idx, (init_value, exec_value) in enumerate(zip(init_values, exec_values)):
-        total = init_value + exec_value
-        if total <= LOWER_MAX_GB:
-            continue
-        ax.bar(
-            idx,
-            y_display(UPPER_MIN_GB) - y_display(LOWER_MAX_GB),
-            width=width,
-            bottom=y_display(LOWER_MAX_GB),
-            color="white",
-            edgecolor="black",
-            linewidth=0.35,
-            hatch="....",
-            zorder=5,
-        )
+    if use_broken_axis:
+        for idx, total in enumerate(totals):
+            if total <= LOWER_MAX_GB:
+                continue
+            ax.bar(
+                idx,
+                y_display(UPPER_MIN_GB) - y_display(LOWER_MAX_GB),
+                width=width,
+                bottom=y_display(LOWER_MAX_GB),
+                color="white",
+                edgecolor="black",
+                linewidth=0.35,
+                hatch="....",
+                zorder=5,
+            )
 
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=TICK_FONTSIZE)
     ax.set_xlabel("Fat-tree scale (k)", fontsize=LABEL_FONTSIZE)
     ax.set_ylabel("Memory footprint (GB)", fontsize=LABEL_FONTSIZE)
-    ymax = max((a + b for a, b in zip(init_values, exec_values)), default=1.0)
-    ax.set_ylim(0, y_display(max(540.0, ymax * 1.05)))
-    ticks = [0, 20, 40, 100, 300, 500]
-    ax.set_yticks([y_display(float(tick)) for tick in ticks])
-    ax.set_yticklabels([str(tick) for tick in ticks], fontsize=TICK_FONTSIZE)
+    ax.tick_params(axis="y", labelsize=TICK_FONTSIZE)
+    if use_broken_axis:
+        ax.set_ylim(0, y_display(max(540.0, ymax * 1.05)))
+        ticks = [0, 20, 40, 100, 300, 500]
+        ax.set_yticks([y_display(float(tick)) for tick in ticks])
+        ax.set_yticklabels([str(tick) for tick in ticks], fontsize=TICK_FONTSIZE)
+    else:
+        ax.set_ylim(0, max(1.0, ymax * LINEAR_AXIS_HEADROOM))
+        ax.yaxis.set_major_locator(MaxNLocator(nbins=5, min_n_ticks=3))
     ax.set_axisbelow(True)
     ax.grid(axis="y", linestyle="--", alpha=0.45, zorder=0)
     ax.tick_params(direction="in", top=True, right=True)
     for spine in ax.spines.values():
         spine.set_linewidth(0.9)
-    ymin, ymax_display = ax.get_ylim()
-    break_y = (y_display(LOWER_MAX_GB) + y_display(UPPER_MIN_GB)) / 2.0
-    break_y_frac = (break_y - ymin) / (ymax_display - ymin)
-    for xpos in (-0.015, 1.015):
-        ax.plot(
-            [xpos - 0.012, xpos + 0.012],
-            [break_y_frac - 0.01, break_y_frac + 0.01],
-            transform=ax.transAxes,
-            color="black",
-            linewidth=0.8,
-            clip_on=False,
-        )
+    if use_broken_axis:
+        ymin, ymax_display = ax.get_ylim()
+        break_y = (y_display(LOWER_MAX_GB) + y_display(UPPER_MIN_GB)) / 2.0
+        break_y_frac = (break_y - ymin) / (ymax_display - ymin)
+        for xpos in (-0.015, 1.015):
+            ax.plot(
+                [xpos - 0.012, xpos + 0.012],
+                [break_y_frac - 0.01, break_y_frac + 0.01],
+                transform=ax.transAxes,
+                color="black",
+                linewidth=0.8,
+                clip_on=False,
+            )
     handles, legend_labels = ax.get_legend_handles_labels()
     fig.tight_layout(rect=(0, 0, 1, 0.86))
     fig.legend(

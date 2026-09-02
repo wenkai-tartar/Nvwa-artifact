@@ -18,7 +18,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
-COMPONENTS = [
+FINE_COMPONENTS = [
     {
         "field": "bfs_route_compute_s",
         "pct_field": "bfs_route_compute_pct",
@@ -42,6 +42,30 @@ COMPONENTS = [
     },
 ]
 
+COARSE_COMPONENTS = [
+    {
+        "field": "topology_build_s",
+        "pct_field": "topology_pct",
+        "label": "Topology build",
+        "color": "#4C78A8",
+        "hatch": "",
+    },
+    {
+        "field": "routing_computation_s",
+        "pct_field": "routing_pct",
+        "label": "Routing computation",
+        "color": "#F58518",
+        "hatch": "////",
+    },
+    {
+        "field": "other_s",
+        "pct_field": "other_pct",
+        "label": "Others",
+        "color": "#54A24B",
+        "hatch": "",
+    },
+]
+
 FIGSIZE = (3.85, 2.35)
 LEGEND_FONTSIZE = 8.2
 LABEL_FONTSIZE = 9.5
@@ -53,7 +77,7 @@ GRID_ALPHA = 0.45
 LEGEND_COLUMN_SPACING = 0.75
 LEGEND_HANDLE_LENGTH = 1.1
 
-STATS_FIELDS = [
+BASE_STATS_FIELDS = [
     "k",
     "fat_tree",
     "routing",
@@ -61,6 +85,9 @@ STATS_FIELDS = [
     "hosts",
     "routing_entries",
     "init_total_s",
+]
+
+FINE_STATS_FIELDS = BASE_STATS_FIELDS + [
     "bfs_route_compute_s",
     "route_table_install_s",
     "other_s",
@@ -69,7 +96,16 @@ STATS_FIELDS = [
     "other_pct",
 ]
 
-INPUT_FIELDS = {
+COARSE_STATS_FIELDS = BASE_STATS_FIELDS + [
+    "topology_build_s",
+    "routing_computation_s",
+    "other_s",
+    "topology_pct",
+    "routing_pct",
+    "other_pct",
+]
+
+FINE_INPUT_FIELDS = {
     "bfs_route_compute_s": "node_bfs_route_compute_s",
     "route_table_install_s": "node_bfs_route_table_install_s",
     "other_s": "node_bfs_other_s",
@@ -77,6 +113,7 @@ INPUT_FIELDS = {
     "route_table_install_pct": "node_bfs_route_table_install_pct",
     "other_pct": "node_bfs_other_pct",
 }
+COARSE_INPUT_FIELDS: dict[str, str] = {}
 DEFAULT_TIME_BREAKDOWN_NAME = "experiment_3_time_breakdown.csv"
 
 
@@ -121,7 +158,31 @@ def save(fig, out_dir: Path, name: str, formats: list[str]) -> list[Path]:
     return paths
 
 
-def summarize(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+def select_breakdown_schema(
+    rows: list[dict[str, str]],
+) -> tuple[list[dict[str, str]], list[str], dict[str, str]]:
+    fieldnames = set().union(*(row.keys() for row in rows))
+    fine_fields = set(FINE_INPUT_FIELDS.values())
+    coarse_fields = {
+        "topology_build_s",
+        "routing_computation_s",
+        "other_s",
+        "topology_pct",
+        "routing_pct",
+        "other_pct",
+    }
+    if fine_fields <= fieldnames:
+        return FINE_COMPONENTS, FINE_STATS_FIELDS, FINE_INPUT_FIELDS
+    if coarse_fields <= fieldnames:
+        return COARSE_COMPONENTS, COARSE_STATS_FIELDS, COARSE_INPUT_FIELDS
+    raise SystemExit("time-breakdown CSV lacks both fine NodeBfs and coarse timing breakdown columns")
+
+
+def summarize(
+    rows: list[dict[str, str]],
+    stats_fields: list[str],
+    input_fields: dict[str, str],
+) -> list[dict[str, str]]:
     buckets: dict[int, dict[str, list[float | None]]] = defaultdict(lambda: defaultdict(list))
     metadata: dict[int, dict[str, str]] = {}
 
@@ -136,10 +197,10 @@ def summarize(rows: list[dict[str, str]]) -> list[dict[str, str]]:
         metadata.setdefault(k, {"routing": routing, "hosts": row.get("hosts", "")})
         if row.get("routing_entries"):
             metadata[k]["routing_entries"] = row.get("routing_entries", "")
-        for field in STATS_FIELDS:
+        for field in stats_fields:
             if field in {"k", "fat_tree", "routing", "repeat_count", "hosts", "routing_entries"}:
                 continue
-            input_field = INPUT_FIELDS.get(field, field)
+            input_field = input_fields.get(field, field)
             buckets[k][field].append(number(row.get(input_field)))
 
     if not buckets:
@@ -149,7 +210,7 @@ def summarize(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     for k in sorted(buckets):
         metrics = buckets[k]
         meta = metadata.get(k, {})
-        out_rows.append({
+        out_row = {
             "k": str(k),
             "fat_tree": f"FT{k}",
             "routing": meta.get("routing", "NodeBfs"),
@@ -157,13 +218,13 @@ def summarize(rows: list[dict[str, str]]) -> list[dict[str, str]]:
             "hosts": meta.get("hosts", ""),
             "routing_entries": meta.get("routing_entries", ""),
             "init_total_s": f"{mean(metrics['init_total_s']):.6f}",
-            "bfs_route_compute_s": f"{mean(metrics['bfs_route_compute_s']):.6f}",
-            "route_table_install_s": f"{mean(metrics['route_table_install_s']):.6f}",
-            "other_s": f"{mean(metrics['other_s']):.6f}",
-            "bfs_route_compute_pct": f"{mean(metrics['bfs_route_compute_pct']):.2f}",
-            "route_table_install_pct": f"{mean(metrics['route_table_install_pct']):.2f}",
-            "other_pct": f"{mean(metrics['other_pct']):.2f}",
-        })
+        }
+        for field in stats_fields:
+            if field in out_row:
+                continue
+            decimals = 2 if field.endswith("_pct") else 6
+            out_row[field] = f"{mean(metrics[field]):.{decimals}f}"
+        out_rows.append(out_row)
     return out_rows
 
 
@@ -175,11 +236,16 @@ def labels(rows: list[dict[str, str]]) -> list[str]:
     return [row["fat_tree"] for row in rows]
 
 
-def plot_figure1c(rows: list[dict[str, str]], out_dir: Path, formats: list[str]) -> list[Path]:
+def plot_figure1c(
+    rows: list[dict[str, str]],
+    out_dir: Path,
+    formats: list[str],
+    components: list[dict[str, str]],
+) -> list[Path]:
     fig, ax = plt.subplots(figsize=FIGSIZE)
     x = list(range(len(rows)))
     bottoms = [0.0] * len(rows)
-    for component in COMPONENTS:
+    for component in components:
         vals = values(rows, component["pct_field"])
         ax.bar(
             x,
@@ -255,13 +321,15 @@ def main() -> int:
     if not breakdown_path.exists():
         raise SystemExit(f"Missing NodeBfs breakdown CSV: {breakdown_path}")
 
-    stats = summarize(read_csv(breakdown_path))
+    raw_rows = read_csv(breakdown_path)
+    components, stats_fields, input_fields = select_breakdown_schema(raw_rows)
+    stats = summarize(raw_rows, stats_fields, input_fields)
     stats_path = out_dir / "figure1c_initialization_time_profile.csv"
-    write_csv(stats_path, STATS_FIELDS, stats)
+    write_csv(stats_path, stats_fields, stats)
 
     formats = parse_formats(args.formats)
     written: list[Path] = [stats_path]
-    written += plot_figure1c(stats, out_dir, formats)
+    written += plot_figure1c(stats, out_dir, formats, components)
 
     for path in written:
         print(path)

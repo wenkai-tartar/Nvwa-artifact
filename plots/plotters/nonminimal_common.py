@@ -311,7 +311,8 @@ def apply_axis_style(ax, values: list[float], *, yscale: str = "linear") -> None
             ax.set_ylim(bottom=0.0, top=top * 1.14 if top > 0 else 1.0)
 
 
-def legend_handles(platform: str) -> list[Line2D]:
+def legend_handles(platform: str, series_keys: list[str] | None = None) -> list[Line2D]:
+    included = set(series_keys) if series_keys is not None else None
     return [
         Line2D(
             [0],
@@ -320,9 +321,13 @@ def legend_handles(platform: str) -> list[Line2D]:
             marker=str(SERIES[series]["marker"]),
             linewidth=2.2,
             markersize=6.5,
+            markerfacecolor="none",
+            markeredgecolor=str(SERIES[series]["color"]),
+            markeredgewidth=1.25,
             label=str(SERIES[series]["label"]),
         )
         for series in PLATFORMS[platform]["series"]
+        if included is None or series in included
     ]
 
 
@@ -341,8 +346,23 @@ def plot_metric_axis(
     params = sorted({int(row["param_value"]) for row in subset})
     positions = {value: idx for idx, value in enumerate(params)}
     values: list[float] = []
+    present_series = []
 
     for series in platform_spec["series"]:
+        for param in params:
+            matches = [
+                row
+                for row in subset
+                if row["series_key"] == series and int(row["param_value"]) == param and row.get(metric) is not None
+            ]
+            value = mean([float(row[metric]) for row in matches])
+            if value is not None:
+                present_series.append(series)
+                break
+
+    for series in platform_spec["series"]:
+        if series not in present_series:
+            continue
         x_values = []
         y_values = []
         for param in params:
@@ -366,11 +386,17 @@ def plot_metric_axis(
             marker=str(SERIES[series]["marker"]),
             linewidth=2.2,
             markersize=6.5,
+            markerfacecolor="none",
+            markeredgecolor=str(SERIES[series]["color"]),
+            markeredgewidth=1.25,
             label=str(SERIES[series]["label"]),
+            zorder=3 + platform_spec["series"].index(series),
         )
 
     ax.set_xticks(range(len(params)))
     ax.set_xticklabels([f"{platform_spec['xprefix']}{value}" for value in params], rotation=35, ha="right")
+    if params:
+        ax.set_xlim(-0.22, len(params) - 1 + 0.22)
     ax.set_ylabel(ylabel)
     if xlabel:
         ax.set_xlabel(xlabel, fontweight="bold")
@@ -399,7 +425,13 @@ def plot_single_metric(
         xlabel=str(spec["xlabel"]),
         yscale=str(spec.get("yscale", "linear")),
     )
-    ax.legend(handles=legend_handles(platform), loc="upper left", frameon=False, fontsize=8, handlelength=1.8)
+    metric = str(spec["metric"])
+    present_series = [
+        series
+        for series in PLATFORMS[platform]["series"]
+        if any(row["series_key"] == series and row.get(metric) is not None for row in figure_rows)
+    ]
+    ax.legend(handles=legend_handles(platform, present_series), loc="upper left", frameon=False, fontsize=8, handlelength=1.8)
     fig.tight_layout()
     return figure_rows, save_figure(fig, out_dir, figure, formats)
 

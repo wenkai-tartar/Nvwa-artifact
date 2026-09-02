@@ -90,6 +90,10 @@ SYSTEMS = [
     },
 ]
 
+SYSTEM_BY_KEY = {str(system["key"]): system for system in SYSTEMS}
+PLOT_ORDER = ["ns3dc", "nvwa"]
+SYSTEM_ZORDER = {"ns3dc": 4, "nvwa": 5}
+
 
 def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
@@ -315,6 +319,9 @@ def legend_handles() -> list[Line2D]:
             marker=str(system["marker"]),
             linewidth=2.5,
             markersize=8,
+            markerfacecolor="none",
+            markeredgecolor=str(system["color"]),
+            markeredgewidth=1.25,
             label=str(system["label"]),
         )
         for system in SYSTEMS
@@ -326,15 +333,32 @@ def plot_panel_axis(ax, rows: list[dict[str, object]], panel: dict[str, object],
     sizes = sorted({int(row["data_size"]) for row in subset})
     positions = {size: idx for idx, size in enumerate(sizes)}
     values: list[float] = []
+    present_system_keys = []
 
     for system in SYSTEMS:
+        system_key = str(system["key"])
+        for size in sizes:
+            matches = [
+                row
+                for row in subset
+                if row["system_key"] == system_key and int(row["data_size"]) == size
+            ]
+            value = mean([float(row["exec_time_s"]) for row in matches])
+            if value is not None:
+                present_system_keys.append(system_key)
+                break
+
+    for system_key in PLOT_ORDER:
+        if system_key not in present_system_keys:
+            continue
+        system = SYSTEM_BY_KEY[system_key]
         x_values = []
         y_values = []
         for size in sizes:
             matches = [
                 row
                 for row in subset
-                if row["system_key"] == system["key"] and int(row["data_size"]) == size
+                if row["system_key"] == system_key and int(row["data_size"]) == size
             ]
             if not matches:
                 continue
@@ -353,11 +377,17 @@ def plot_panel_axis(ax, rows: list[dict[str, object]], panel: dict[str, object],
             marker=str(system["marker"]),
             linewidth=2.2,
             markersize=6.5,
+            markerfacecolor="none",
+            markeredgecolor=str(system["color"]),
+            markeredgewidth=1.25,
             label=str(system["label"]),
+            zorder=SYSTEM_ZORDER.get(system_key, 3),
         )
 
     ax.set_xticks(range(len(sizes)))
     ax.set_xticklabels([data_size_label(size) for size in sizes], rotation=45, ha="right")
+    if sizes:
+        ax.set_xlim(-0.2, len(sizes) - 1 + 0.2)
     ax.set_ylabel("Execution time (s)")
     if xlabel:
         ax.set_xlabel(xlabel, fontweight="bold")
